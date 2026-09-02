@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   // "TUTOR" or "STUDENT"
+
+  // Relations
+  studentProfilesCreated StudentProfile[] @relation("TutorToStudentProfiles")
+  studentProfile         StudentProfile?  @relation("UserToStudentProfile") // If this user is a student, link to their profile
+
+  sessionsAsTutor Session[] @relation("TutorSessions")
+}
+
+model StudentProfile {
+  id            String   @id @default(uuid())
+  
+  tutorId       String
+  tutor         User     @relation("TutorToStudentProfiles", fields: [tutorId], references: [id])
+  
+  userId        String?  @unique
+  user          User?    @relation("UserToStudentProfile", fields: [userId], references: [id])
+  
+  subject       String
+  level         String
+  learningGoals String
+  weakAreas     String
+
+  sessions      Session[]
+}
+
+model Session {
+  id              String   @id @default(uuid())
+  
+  tutorId         String
+  tutor           User     @relation("TutorSessions", fields: [tutorId], references: [id])
+  
+  studentId       String
+  studentProfile  StudentProfile @relation(fields: [studentId], references: [id])
+  
+  startTime       DateTime
+  endTime         DateTime
+  topic           String
+  
+  // "SCHEDULED", "IN_PROGRESS", "COMPLETED", "AI_REVIEWED"
+  status          String   @default("SCHEDULED")
+  
+  notes           String   @default("")
+  
+  aiLessonPlan    String?  // Storing JSON string
+  aiReview        String?  // Storing JSON string
+}
