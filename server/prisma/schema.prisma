@@ -58,4 +58,7 @@ model Session {
   
   aiLessonPlan    String?  // Storing JSON string
   aiReview        String?  // Storing JSON string
+  
+  classMode       String?  // "VIDEO_CALL", "RECORDING", "NOTES"
+  classAssetUrl   String?  // URL to external link or local file path
 }

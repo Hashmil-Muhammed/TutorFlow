@@ -1,111 +1,67 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import "tailwindcss";
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
+@theme {
+  --color-brand-primary: #2563eb; /* blue-600 */
+  --color-brand-secondary: #4f46e5; /* indigo-600 */
+  
+  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+  
+  --animate-fade-in-up: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased font-sans selection:bg-blue-600 selection:text-white min-h-screen overflow-x-hidden;
+    
+    /* Premium subtle background image with white overlay to ensure readability */
+    background-image: 
+      linear-gradient(rgba(248, 250, 252, 0.85), rgba(248, 250, 252, 0.95)), 
+      url('https://images.unsplash.com/photo-1513258496099-48168024aec0?q=80&w=3150&auto=format&fit=crop');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
   }
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+@layer components {
+  /* Premium Solid Card instead of glass-panel */
+  .premium-card {
+    @apply bg-white border border-slate-200/60 rounded-[1.25rem] shadow-sm transition-all duration-500;
   }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+  
+  .premium-card-interactive {
+    @apply bg-white border border-slate-200/60 rounded-[1.25rem] shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/5 hover:border-blue-200;
   }
-}
-p {
-  margin: 0;
-}
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
+  .btn-primary {
+    @apply bg-blue-600 text-white font-semibold py-2.5 px-5 rounded-xl 
+           transition-all duration-300 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/20 active:scale-[0.97] 
+           disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2;
+  }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  .btn-secondary {
+    @apply bg-white text-slate-700 border border-slate-200 font-semibold py-2.5 px-5 rounded-xl 
+           transition-all duration-300 hover:bg-slate-50 hover:border-slate-300 hover:shadow-sm active:scale-[0.97] flex items-center justify-center gap-2;
+  }
+
+  .input-field {
+    @apply w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-slate-800 
+           focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-500 focus:bg-white
+           transition-all duration-300 placeholder:text-slate-400 font-medium;
+  }
+
+  .label-text {
+    @apply block text-sm font-semibold text-slate-700 mb-2 tracking-tight;
+  }
 }
