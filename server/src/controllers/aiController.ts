@@ -23,6 +23,21 @@ export const generateLessonPlan = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ error: 'Lesson plan can only be generated for SCHEDULED sessions' });
     }
 
+    // Fetch past completed/reviewed sessions to give context to AI
+    const pastSessions = await prisma.session.findMany({
+      where: { 
+        studentId: session.studentId, 
+        tutorId,
+        status: { in: ['COMPLETED', 'AI_REVIEWED'] }
+      },
+      orderBy: { startTime: 'desc' },
+      take: 5 // Last 5 sessions
+    });
+
+    const pastContext = pastSessions.map(s => 
+      `Topic: ${s.topic}\nNotes: ${s.notes}\nAI Review: ${s.aiReview || 'N/A'}`
+    ).join('\n---\n');
+
     const prompt = `
       You are an expert tutor. Create a lesson plan for a tutoring session.
       Student Info:
@@ -31,6 +46,9 @@ export const generateLessonPlan = async (req: AuthRequest, res: Response) => {
       - Learning Goals: ${session.studentProfile.learningGoals}
       - Weak Areas: ${session.studentProfile.weakAreas}
       - Today's Topic: ${session.topic}
+
+      Past Sessions Context (Use this to avoid repeating topics and focus on past weak points):
+      ${pastContext}
 
       Output MUST be valid JSON in this exact format, with no markdown formatting around it:
       {

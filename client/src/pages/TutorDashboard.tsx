@@ -207,29 +207,51 @@ const TutorDashboard: React.FC = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {students.map(student => (
-              <div key={student.id} className="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-green-500">
+              <div key={student.id} className="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-green-500 flex flex-col">
                 <h3 className="font-bold text-lg mb-1">{student.user.name}</h3>
                 <p className="text-sm text-gray-500 mb-3">{student.user.email}</p>
                 <div className="text-sm mb-4">
                   <p><span className="font-medium text-gray-700">Subject:</span> {student.subject}</p>
                   <p><span className="font-medium text-gray-700">Level:</span> {student.level}</p>
                 </div>
-                <button 
-                  onClick={async () => {
-                    try {
-                      alert("Generating Progress Summary...");
-                      const res = await api.get(`/ai/progress-summary/${student.id}`);
-                      alert(res.data.progressSummary);
-                    } catch(e: any) {
-                      alert(e.response?.data?.error || "Failed to generate");
-                    }
-                  }}
-                  className="w-full bg-purple-100 text-purple-700 py-2 rounded font-medium hover:bg-purple-200"
-                >
-                  ✨ AI Progress Summary
-                </button>
+                
+                <div className="mt-auto space-y-2">
+                  <button 
+                    onClick={async () => {
+                      try {
+                        alert("Generating Progress Summary...");
+                        const res = await api.get(`/ai/progress-summary/${student.id}`);
+                        alert(res.data.progressSummary);
+                      } catch(e: any) {
+                        alert(e.response?.data?.error || "Failed to generate");
+                      }
+                    }}
+                    className="w-full bg-purple-100 text-purple-700 py-2 rounded font-medium hover:bg-purple-200"
+                  >
+                    ✨ AI Progress Summary
+                  </button>
+                  
+                  {/* Progress View / History */}
+                  <div className="pt-2 border-t mt-2">
+                    <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Past Sessions</h4>
+                    {sessions.filter(s => s.studentId === student.id && (s.status === 'COMPLETED' || s.status === 'AI_REVIEWED')).length > 0 ? (
+                      <ul className="text-sm space-y-1">
+                        {sessions.filter(s => s.studentId === student.id && (s.status === 'COMPLETED' || s.status === 'AI_REVIEWED'))
+                          .sort((a,b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+                          .map(s => (
+                            <li key={s.id} className="flex justify-between items-center bg-gray-50 p-1 rounded">
+                              <span className="truncate w-32">{s.topic}</span>
+                              <span className="text-xs text-gray-400">{new Date(s.startTime).toLocaleDateString()}</span>
+                            </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-xs text-gray-400">No completed sessions yet.</p>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
             {students.length === 0 && <p className="text-gray-500">No students added yet.</p>}
