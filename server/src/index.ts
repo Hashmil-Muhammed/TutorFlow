@@ -10,8 +10,12 @@ app.use(cors());
 app.use(express.json());
 
 import authRoutes from './routes/authRoutes';
+import studentRoutes from './routes/studentRoutes';
+import sessionRoutes from './routes/sessionRoutes';
 
 app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/sessions', sessionRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
