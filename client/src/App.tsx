@@ -4,6 +4,7 @@ import { useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import TutorDashboard from './pages/TutorDashboard';
 import StudentDashboard from './pages/StudentDashboard';
+import SessionLiveRoom from './pages/SessionLiveRoom';
 
 const PrivateRoute = ({ children, role }: { children: JSX.Element, role: 'TUTOR' | 'STUDENT' }) => {
   const { user, loading } = useAuth();
@@ -49,6 +50,15 @@ function App() {
         element={
           <PrivateRoute role="TUTOR">
             <TutorDashboard />
+          </PrivateRoute>
+        } 
+      />
+      
+      <Route 
+        path="/session/:id" 
+        element={
+          <PrivateRoute role="TUTOR">
+            <SessionLiveRoom />
           </PrivateRoute>
         } 
       />

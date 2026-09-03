@@ -155,7 +155,11 @@ const TutorDashboard: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sessions.map(session => (
-              <div key={session.id} className="bg-white p-5 rounded-xl shadow-sm border">
+              <div 
+                key={session.id} 
+                onClick={() => window.location.href = `/session/${session.id}`}
+                className="bg-white p-5 rounded-xl shadow-sm border cursor-pointer hover:shadow-md transition-shadow"
+              >
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-semibold text-lg">{session.topic}</h3>
                   <span className={`text-xs px-2 py-1 rounded-full ${session.status === 'SCHEDULED' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`}>
@@ -208,10 +212,24 @@ const TutorDashboard: React.FC = () => {
               <div key={student.id} className="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-green-500">
                 <h3 className="font-bold text-lg mb-1">{student.user.name}</h3>
                 <p className="text-sm text-gray-500 mb-3">{student.user.email}</p>
-                <div className="text-sm">
+                <div className="text-sm mb-4">
                   <p><span className="font-medium text-gray-700">Subject:</span> {student.subject}</p>
                   <p><span className="font-medium text-gray-700">Level:</span> {student.level}</p>
                 </div>
+                <button 
+                  onClick={async () => {
+                    try {
+                      alert("Generating Progress Summary...");
+                      const res = await api.get(`/ai/progress-summary/${student.id}`);
+                      alert(res.data.progressSummary);
+                    } catch(e: any) {
+                      alert(e.response?.data?.error || "Failed to generate");
+                    }
+                  }}
+                  className="w-full bg-purple-100 text-purple-700 py-2 rounded font-medium hover:bg-purple-200"
+                >
+                  ✨ AI Progress Summary
+                </button>
               </div>
             ))}
             {students.length === 0 && <p className="text-gray-500">No students added yet.</p>}
