@@ -70,7 +70,7 @@ const StudentDashboard: React.FC = () => {
   // Notification state
   const [notifications, setNotifications] = useState<{ id: string; message: string; time: string; isRead: boolean }[]>([]);
   const [showNotifMenu, setShowNotifMenu] = useState(false);
-  const [toastNotif, setToastNotif] = useState<string | null>(null);
+  const [, setToastNotif] = useState<string | null>(null);
 
   const playNotificationSound = () => {
     try {
@@ -573,7 +573,7 @@ const StudentDashboard: React.FC = () => {
                     <div className="py-20 text-center"><span className="text-5xl block mb-4 opacity-30">📝</span><p className="text-slate-400 font-bold text-lg">No homework yet.</p><p className="text-sm text-slate-400 mt-1">Homework appears after your tutor generates an AI review.</p></div>
                   ) : (
                     <div ref={sliderRef} className={viewMode === 'slider' ? 'flex gap-6 overflow-x-auto pb-4 pt-2 scroll-smooth snap-x snap-mandatory no-scrollbar items-stretch' : 'flex flex-wrap gap-4 md:gap-6 items-stretch pt-2'}>
-                      {homeworkSessions.map((session, i) => {
+                      {homeworkSessions.map((session) => {
                         const review = parseReview(session.aiReview);
                         if (!review) return null;
                         
@@ -734,7 +734,7 @@ const StudentDashboard: React.FC = () => {
                     <div className="py-20 text-center"><span className="text-5xl block mb-4 opacity-30">✨</span><p className="text-slate-400 font-bold text-lg">No summaries yet.</p><p className="text-sm text-slate-400 mt-1">AI summaries appear after your tutor generates a session review.</p></div>
                   ) : (
                     <div ref={sliderRef} className={viewMode === 'slider' ? 'flex gap-6 overflow-x-auto pb-4 pt-2 scroll-smooth snap-x snap-mandatory no-scrollbar items-stretch' : 'flex flex-wrap gap-4 md:gap-6 items-stretch pt-2'}>
-                      {summarySessions.map((session, i) => {
+                      {summarySessions.map((session) => {
                         const review = parseReview(session.aiReview);
                         if (!review) return null;
                         

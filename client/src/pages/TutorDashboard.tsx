@@ -297,15 +297,13 @@ const TutorDashboard: React.FC = () => {
   e.preventDefault();
 
   try {
-    let studentResponse;
-
     if (editStudentId) {
       // Existing edit functionality — unchanged
-      studentResponse = await api.put(`/students/${editStudentId}`, newStudent);
+      await api.put(`/students/${editStudentId}`, newStudent);
       setToastNotif("Student updated successfully");
     } else {
       // Create student first
-      studentResponse = await api.post('/students', newStudent);
+      await api.post('/students', newStudent);
 
       // Send welcome email after student is successfully created
       try {

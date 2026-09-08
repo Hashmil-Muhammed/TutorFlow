@@ -51,7 +51,7 @@ const SessionLiveRoom: React.FC = () => {
   }, [notes, savedNotes]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (status === "IN_PROGRESS" && session?.endTime && session?.startTime) {
       const durationMs = new Date(session.endTime).getTime() - new Date(session.startTime).getTime();
       let startedAt = localStorage.getItem(`session_start_${session.id}`);
@@ -131,7 +131,6 @@ const SessionLiveRoom: React.FC = () => {
     status === "AI_REVIEWED" ? "text-purple-600" : "text-slate-500 border-slate-200";
 
   const navBtnCls = (panel: string) => `w-full aspect-square rounded-[1rem] flex items-center justify-center transition-all ${activePanel === panel ? "bg-[#fccc42] text-black shadow-lg scale-110" : "text-slate-400 hover:text-white hover:bg-white/5"}`;
-  const saveCls = `w-full aspect-square rounded-[1rem] flex items-center justify-center transition-all ${isSaving ? "bg-amber-500/20 text-amber-400" : notes !== savedNotes ? "bg-white/5 text-slate-500" : "bg-white/5 text-slate-600"}`;
   const saveTagCls = `flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest transition-all ${
   isSaving 
     ? "text-amber-600" 
