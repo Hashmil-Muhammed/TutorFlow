@@ -194,6 +194,7 @@ const Login: React.FC = () => {
           <path d="M 12 68 C 18 64 23 54 20 44 C 16 34 2 38 4 52 C 6 64 25 72 37 62 C 48 52 46 26 34 20 C 22 14 18 36 29 48 C 42 62 62 66 75 50 C 88 34 85 10 70 6 C 56 2 54 26 68 36 C 78 44 88 40 94 30" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <br />
+        <br />
         <div className="max-w-7xl mx-auto w-full">
           {/* ── HEADER SECTION ── */}
           <div className="text-center mb-24 md:mb-28 relative z-10 flex flex-col items-center w-full mt-10">
