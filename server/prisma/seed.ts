@@ -4,28 +4,37 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('password123', 10)
+  const tutorPassword = await bcrypt.hash('Hazim@123', 10)
+  const studentPassword = await bcrypt.hash('hashmil@123', 10)
 
   // Seed Tutor
   const tutor = await prisma.user.upsert({
-    where: { email: 'tutor@tutorflow.com' },
-    update: {},
+    where: { email: 'hazim@gmail.com' },
+    update: {
+      password: tutorPassword,
+      name: 'Hazim Tutor',
+      role: 'TUTOR',
+    },
     create: {
-      email: 'tutor@tutorflow.com',
-      password: hashedPassword,
-      name: 'John Tutor',
+      email: 'hazim@gmail.com',
+      password: tutorPassword,
+      name: 'Hazim Tutor',
       role: 'TUTOR',
     },
   })
 
   // Seed Student
   const studentUser = await prisma.user.upsert({
-    where: { email: 'student@tutorflow.com' },
-    update: {},
+    where: { email: 'hmpibnurnh3@gmail.com' },
+    update: {
+      password: studentPassword,
+      name: 'Hashmil Student',
+      role: 'STUDENT',
+    },
     create: {
-      email: 'student@tutorflow.com',
-      password: hashedPassword,
-      name: 'Alice Student',
+      email: 'hmpibnurnh3@gmail.com',
+      password: studentPassword,
+      name: 'Hashmil Student',
       role: 'STUDENT',
     },
   })
@@ -49,8 +58,8 @@ async function main() {
   }
 
   console.log('Seeding completed successfully!')
-  console.log('Test Tutor: tutor@tutorflow.com / password123')
-  console.log('Test Student: student@tutorflow.com / password123')
+  console.log('Test Tutor: hazim@gmail.com / Hazim@123')
+  console.log('Test Student: hmpibnurnh3@gmail.com / hashmil@123')
 }
 
 main()
