@@ -133,3 +133,11 @@ dev.db
 *.njsproj
 *.sln
 *.sw?
+
+# Temporary files
+~$*
+*.tmp
+
+# Uploads
+server/public/uploads/*
+!server/public/uploads/.gitkeep

@@ -151,6 +151,18 @@ export const generateProgressSummary = async (req: AuthRequest, res: Response) =
     
     if (!tutorId) return res.status(401).json({ error: 'Unauthorized' });
 
+    // Fetch student to get their exact name
+    const studentProfile = await prisma.studentProfile.findUnique({
+      where: { id: studentId },
+      include: { user: { select: { name: true } } }
+    });
+
+    if (!studentProfile) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    const studentName = studentProfile.user.name;
+
     // Fetch past reviews for this student
     const pastSessions = await prisma.session.findMany({
       where: { studentId, tutorId, status: 'AI_REVIEWED' },
@@ -164,11 +176,11 @@ export const generateProgressSummary = async (req: AuthRequest, res: Response) =
     const reviews = pastSessions.map(s => s.aiReview).join('\n---\n');
 
     const prompt = `
-      You are an expert educational counselor. Review the past session reviews for this student:
+      You are an expert educational counselor. Review the past session reviews for this student named ${studentName}:
       
       ${reviews}
 
-      Write a single, encouraging paragraph (3-4 sentences) summarizing their overall progress. Mention where they improved and what they still struggle with. Return plain text only.
+      Write a single, encouraging paragraph (3-4 sentences) summarizing ${studentName}'s overall progress. Mention where they improved and what they still struggle with. Return plain text only. Use the exact name '${studentName}' in your summary.
     `;
 
     const response = await ai.models.generateContent({

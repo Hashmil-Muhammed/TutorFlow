@@ -19,6 +19,7 @@
     "react-datepicker": "^9.1.0",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",
+    "react-sketch-canvas": "^8.0.0",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {

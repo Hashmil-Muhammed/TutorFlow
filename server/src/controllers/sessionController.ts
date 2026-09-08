@@ -68,6 +68,12 @@ export const scheduleSession = async (req: AuthRequest, res: Response) => {
       }
     });
 
+    // Fetch tutor user details for email template
+    const tutorUser = await prisma.user.findUnique({
+      where: { id: tutorId },
+      select: { name: true, email: true }
+    });
+
     // Send email notification
     const joinLink = `http://localhost:5174/session/${session.id}`;
     await sendSessionEmail(
@@ -78,7 +84,12 @@ export const scheduleSession = async (req: AuthRequest, res: Response) => {
         startTime: session.startTime.toISOString(),
         endTime: session.endTime.toISOString(),
         classMode: session.classMode || 'Standard Class',
-        link: joinLink
+        link: joinLink,
+        subject: studentProfile.subject,
+        level: studentProfile.level,
+        tutorName: tutorUser?.name || req.user?.name,
+        tutorEmail: tutorUser?.email || req.user?.email,
+        assetUrl: session.classAssetUrl
       }
     );
 
@@ -121,7 +132,8 @@ export const getMySessions = async (req: AuthRequest, res: Response) => {
       sessions = await prisma.session.findMany({
         where: { studentId: profile.id }, // studentId in Session maps to StudentProfile id
         include: {
-          tutor: { select: { name: true, email: true } }
+          tutor: { select: { name: true, email: true } },
+          studentProfile: { select: { subject: true, level: true } }
         },
         orderBy: { startTime: 'asc' }
       });
